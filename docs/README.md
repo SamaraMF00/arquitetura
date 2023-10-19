@@ -1,4 +1,6 @@
-## Arquitetura de Software
+# Arquitetura de Software
+
+## Analisando Arquiteturas de Sistemas de Software Populares
 
 - Grupo: Bruno Gomes, João Mairinque, Matheus Andrade, Matheus Vieira e Samara Martins.
 - Sistema: Twitch.
