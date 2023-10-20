@@ -10,7 +10,12 @@
 
 ### *Apresentação do sistema:*
 
-Twitch é uma plataforma de transmissão de vídeo ao vivo que se destaca principalmente pelo streaming de jogos. Neste ambiente, os utilizadores têm a oportunidade de interagir uns com os outros, tanto através de um chat disponível como através das transmissões de vídeo e áudio. O sistema foi lançado em junho de 2011 com uma arquitetura monolítica desenvolvida com Ruby on Rails. Entretanto, a base de usuários do Twitch começou a crescer rapidamente, chegando a cerca de 20.000 usuários no mesmo ano do lançamento, o que naquele período era considerado um número elevado. Com esse aumento, problemas como gargalo de desempenho começaram a surgir, onde, partes do sistema começaram a atingir seus limites, prejudicando seu funcionamento como um todo.
+Twitch é uma plataforma de transmissão de vídeo ao vivo lançada em junho de 2011, que se destaca principalmente pelo streaming de jogos. Neste ambiente, os utilizadores têm a oportunidade de interagir uns com os outros, tanto através de um chat disponível como através das transmissões de vídeo e áudio. 
+
+### *Informações arquiteturais*
+Inicialmente o sistema foi desenvolvido como uma arquitetura monolítica desenvolvida com Ruby on Rails. Entretanto, a base de usuários do Twitch começou a crescer rapidamente, chegando a cerca de 20.000 usuários no mesmo ano do lançamento, o que naquele período era considerado um número elevado. Com esse aumento, problemas como gargalo de desempenho começaram a surgir, onde, partes do sistema começaram a atingir seus limites, prejudicando seu funcionamento como um todo. Por esse motivo, os criadoress da aplicação começaram a discutir uma possível mudança de arquitetura, passando a utilizar microsserviços. A mudança para microserviços incluiu a adição de novas liguagens como Go, Typescript, C++ e migração do Rails para o React.js. Essas tecnologias foram implementadas visando otimização do novo modelo de arquitetura a fim de resolver o problema de escalabilidade.
+
+### *Dados de usuários e escala*
 Atualmente a twitch alcança média superior a 2 milhões de viewers simultâneos por mês, e teve seu pico máximo de 6.6 milhões em 24 de Junho de 2022. Além disso, conta com a média superior a 80 mil canais ao vivo simultaneamente, com o pico de 233 mil em 30 de novembro de 2020. A Figura 01 abaixo apresenta o gráfico de viewers, demonstrando a média e os picos durante os anos.
 
 
