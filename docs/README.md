@@ -32,7 +32,7 @@ Figura 02: Gráficos em barras demonstrando a relação de crescimento dos usuá
 ### *Arquitetura de software*
 A arquitetura em monolito acarretava em várias dificuldades para os desenvolvedores, como o uso de uma única pipeline deploy para todos, dificuldade de coordenação do ambiente de testes, lentidão na requisição no banco de dados, rastreamento lento devido ao grande volume de endpoints da API. O modelo até então desenvolvido em Ruby era caracterizado como uma “spaghetti architecture”. A transição para a arquitetura de microsserviços implementada principalmente em Go teve seu início e principal esforço a adição de uma camada extra mais externa da API backend, um proxy reverso chamado NGINX. O NGINX tem como função direcionar parte do tráfego para uma nova parte da borda da API, que utiliza um middleware comum para validação, autorização e limitação de taxa; mas delega toda a lógica de negócios aos microsserviços subjacentes.
 
-![Figura 03: Modelo arquitetural simplificado da Twitch.](img02.png)
+![Figura 03: Modelo arquitetural simplificado da Twitch.](img03.png)
 
 Com a resolução da implementação do proxy foi definido um processo de migração dos endpoints:
 - Desenvolver novo conjunto de microsserviços;
