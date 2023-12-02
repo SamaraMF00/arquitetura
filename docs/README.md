@@ -58,9 +58,67 @@ Como uma tentativa de evitar pontos cegos como os citados, as companhias tendem 
 
 Apesar das migrações para o microsserviços terem sido árduas e cheias de desafios, o time de desenvolvedores e engenheiros da Twitch conseguiu chegar em um patamar onde a maioria dos times possuem vários serviços onde cada ambiente é isolado em uma conta separada da AWS. É dito pelo autor do artigo que as migrações na plataforma da Twitch continuam acontecendo conforme novas tecnologias vão surgindo, mas a situação atual da empresa permite que um time consiga implementar essas tecnologias sem que afete os outros times.  
 
+### *Tecnologias utilizadas*
 
-*Referências*
-https://twitchtracker.com/statistics
-https://blog.twitch.tv/en/2023/09/28/twitch-state-of-engineering-2023/
-https://blog.twitch.tv/en/2022/04/12/breaking-the-monolith-at-twitch-part-2/
-https://pt.slideshare.net/InfoQ/twitch-plays-pokmon-twitchs-chat-architecture
+A arquitetura da Twitch envolve diversos componentes e tecnologias, destacando a complexidade e a escalabilidade dos sistemas necessários para suportar um serviço de streaming ao vivo e de alto desempenho. As principais tecnologias utilizadas no projeto foram Ruby, Go, VOD, Computação de borda e React.js.
+
+ - Ruby: O Twitch originalmente utilizava Ruby on Rails, uma escolha comum para startups devido à sua rapidez no desenvolvimento e facilidade de uso. A abordagem monolítica com Ruby on Rails permitiu ao Twitch lançar rapidamente e iterar de maneira eficiente, algo crítico para startups em estágio inicial. Conforme o Twitch cresceu, a arquitetura monolítica começou a apresentar desafios em termos de coordenação, resiliência e escalabilidade. Isto levou à necessidade de dividir o código em partes menores, ou microsserviços​.
+
+ - Go: Em 2012, Go estava ganhando popularidade e havia alcançado um nível de maturidade com o lançamento do Go 1.0, a premissa de ser uma linguagem eficiente e simples chamou a atenção dos desenvolvedores da Twitch, que quando começaram a implementar a mesma até mesmo conseguiram solucionar bugs no chat que até então não eram tão triviais de se resolver. Um dos benefícios chave de utilizar Go na implementação do backend da Twitch, é porque essa linguagem tem suporte para concorrência (possibilidade das funções serem executadas de forma independente), isso permite que a Twitch consiga lidar com múltiplas streams e chats de forma simultânea. Isso significa que o usuário terá uma boa experiência independente da quantidade de usuários utilizando a plataforma ao mesmo tempo. 
+
+ - VOD: O sistema de Vídeo sob Demanda (VOD) do Twitch é uma parte essencial da plataforma, permitindo que os usuários acessem conteúdo de vídeo gravado. O sistema VOD do Twitch arquiva transmissões ao vivo para que os espectadores possam assistir quando quiserem. Isso inclui transmissões de jogos, eventos e outros conteúdos. O VOD é crucial para usuários que não podem assistir às transmissões ao vivo ou desejam revisitar seus momentos favoritos.
+
+ - Computação de borda: A "distribuição e borda" no contexto do Twitch se refere à forma como o serviço de streaming distribui conteúdo de vídeo para os usuários. Depois que o vídeo é transcodificado em múltiplos fluxos HLS (HTTP Live Streaming), ele é distribuído para pontos de presença (POPs) geograficamente dispersos. Esta abordagem garante que os usuários tenham a melhor experiência de streaming de vídeo possível, com alta qualidade e baixa latência. Esses componentes são cruciais para manter o alto desempenho e a escalabilidade do Twitch, garantindo que os usuários em todo o mundo tenham uma experiência de visualização consistente e de alta qualidade.
+
+ - React.js: React.js é conhecido por sua eficiência na criação de interfaces de usuário interativas e dinâmicas. Ele permite a construção de componentes reutilizáveis, o que é ideal para um serviço complexo e multifacetado como o Twitch. A transição para o React.js provavelmente visava oferecer uma experiência de usuário mais fluida e responsiva, especialmente importante para uma plataforma de streaming ao vivo com interações em tempo real. Essa escolha mostra o compromisso do Twitch em adaptar sua tecnologia para melhorar continuamente a experiência do usuário, mantendo-se ágil e responsivo às mudanças nas demandas do mercado e tecnologia.
+
+ - Pub/Sub (Publish/Subscriber): No sistema de chat, o Twitch utiliza o padrão pub/sub para a distribuição eficiente de mensagens entre usuários​​.
+
+ - Cliente-Servidor: Empregado na interação entre as aplicações cliente (web, mobile, console) e os servidores do Twitch, facilitando a comunicação e a entrega de conteúdo​​.
+
+### *NGINX*
+		
+O NGINX é um servidor web open source, de alta performance. Utiliza uma arquitetura avançada baseada em eventos — Event-based Architecture (EBA). Característica que permite inúmeras conexões simultâneas, proporcionando mais velocidade e escalabilidade. 
+
+O NGINX entrega o conteúdo estático do site de forma rápida, é fácil de configurar e tem baixo consumo de recursos. Por conta de todas essas características, o servidor é utilizado por grandes empresas como Microsoft, IBM, Google, WordPress.org, entre outras.
+
+#### *Como o NGINX  funciona?*
+
+ O NGINX funciona com base em eventos. Assim, em vez de fazer uma solicitação direta ao servidor, ele executa um processo mestre, chamado worker, e vários processos de trabalho, chamados conexões worker. Todo esse processo trabalha continuamente e de forma assíncrona. Quando há um pedido de processamento, ele é feito pelas conexões worker, que fazem a solicitação ao processo mestre que, por sua vez, processa e retorna o resultado.
+
+ Quando o servidor está operando, cada worker carrega uma cadeia de módulos, dependendo de como a configuração é feita durante a instalação. Dessa forma, cada solicitação é feita com todos os recursos configurados em operação.
+
+ ![Figura 04](img05.png)
+
+#### *Quais são as características do NGINX?*
+ O NGINX conta com uma arquitetura modular extensível, o que facilita a extensão dos recursos para quem quiser mexer em seu código fonte. O módulo principal é responsável por fazer o tratamento da conexão e, além dele, existe uma série de módulos para diferentes tipos de processamento. 
+
+ - Balanceamento de carga: quando há um acréscimo nas solicitações ao servidor, como o aumento do tráfego, o NGINX consegue direcionar o fluxo para outros servidores que estejam no arquivo de configuração.
+ - Proxy reverso: o proxy reverso é um servidor web que recebe as solicitações de conexão e gerencia o que será preciso requisitar no servidor principal ou verifica se a solicitação já está disponível em cache. 
+
+ ![Figura 05](img04.png)
+
+ - Streaming: oferece um módulo nativo para streaming. Permitindo uma série de configurações sobre como o servidor tratará conteúdos MP4 e FLV, como o tamanho do buffer utilizado, o tempo de timeout, etc.
+
+#### *Por que usar o servidor web NGINX?*
+
+ - Velocidade: a arquitetura baseada em eventos, faz com que as requisições ao servidor sejam feitas com mais rapidez, devido ao melhor aproveitamento de memória e recursos de CPU.
+ - Escalabilidade: oferece recursos como o balanceamento de cargas, permitindo o escalonamento rápido das requisições em situações diversas.
+ - Compatibilidade: o servidor é sua compatibilidade com os diversos aplicativos web utilizados no mercado, como WordPress, Joomla, Python, entre outros
+ - Fácil configuração: a configuração do servidor é simples, pois funciona com base em diretivas que devem ser especificadas no arquivo de configuração.
+ 
+
+#
+
+### *Referências*
+
+ Twitch Tracker. Estatísticas. Disponível em: https://twitchtracker.com/statistics. Acesso em: 10/11/2023
+
+Twitch. Estado de Engenharia 2023. Disponível em: https://blog.twitch.tv/en/2023/09/28/twitch-state-of-engineering-2023/. Acesso em: 10/11/2023
+
+Twitch. Quebrando o Monólito no Twitch - Parte 2. Disponível em: https://blog.twitch.tv/en/2022/04/12/breaking-the-monolith-at-twitch-part-2/. Acesso em: 10/11/2023
+
+InfoQ. Twitch Plays Pokémon: A Arquitetura de Chat da Twitch. Disponível em: https://pt.slideshare.net/InfoQ/twitch-plays-pokmon-twitchs-chat-architecture. Acesso em: 10/11/2023
+
+O que é NGINX, como funciona e por que você deve usá-lo. Disponível em: https://rockcontent.com/br/blog/nginx/
+
